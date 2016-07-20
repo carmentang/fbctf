@@ -215,6 +215,23 @@ function addNewLink($clicked) {
   $links.append($addedLink);
 }
 
+/**
+ * Add a new hint
+ *
+ * @param $clicked (jquery object)
+ *   - the clicked button
+ */
+function addNewHint($clicked) {
+  var $hints = $('.hint', $clicked),
+      $newHint = $('.new-hint-hidden', $clicked),
+      $addedHint = $newHint.clone();
+
+  $addedHint.removeClass('completely-hidden');
+  $addedHint.removeClass('new-hint-hidden');
+
+  $hints.append($addedHint);
+}
+
 // Create new attachment
 function createAttachment(section) {
   var level_id = $('.attachment_form input[name=level_id]', section)[0].value;
@@ -938,6 +955,8 @@ module.exports = {
         $containingDiv = $self.closest('.existing-link');
         $containingDiv.remove();
         deleteLink($containingDiv);
+      } else if (action === 'add-hint') {
+        addNewHint($section);
       }
 
       if (actionModal) {

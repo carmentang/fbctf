@@ -525,6 +525,24 @@ class AdminController extends Controller {
 
   public async function genRenderQuizContent(): Awaitable<:xhp> {
     $countries_select = await $this->genGenerateCountriesSelect(0);
+
+
+    $hint_div =
+      <div class="hints">
+        <div class "new-hint new-hint-hidden completely-hidden">
+          <div class="form-el fb-column-container col-gutters">
+            <div class="col col-2-3 el--block-label el--full-text">
+              <label>Hint</label>
+              <input name="hint" type="text"/>
+            </div>
+            <div class="col col-1-3 el--block-label el--full-text">
+              <label>Hint Penalty</label>
+              <input name="penalty" type="text"/>
+            </div>
+          </div>
+        </div>
+      </div>;
+
     $adminsections =
       <div class="admin-sections">
         <section id="new-element" class="validate-form admin-box completely-hidden">
@@ -568,6 +586,10 @@ class AdminController extends Controller {
                     <label>Hint Penalty</label>
                     <input name="penalty" type="text"/>
                   </div>
+                </div><br/>
+                {$hint_div}<br/>
+                <div class="admin-buttons">
+                  <button class="fb-cta" data-action="add-hint">Add Hint</button>
                 </div>
               </div>
             </div>
@@ -617,6 +639,23 @@ class AdminController extends Controller {
 
     $c = 1;
     $quizes = await Level::genAllQuizLevels();
+
+    $all_hints = await HintLog::genAllHints();
+    foreach ($all_hints as $hint) {
+      $hint_div->appendChild(
+        <div class="form-el fb-column-container col-gutters">
+          <div class="col col-2-3 el--block-label el--full-text">
+            <label>Hint</label>
+            <input name="hint" type="text" value={$flag->getHint()} disabled={true}/>
+          </div>
+          <div class="col col-1-3 el--block-label el--full-text">
+            <label>Hint Penalty</label>
+            <input name="penalty" type="text" value={strval($flag->getPenalty())} disabled={true}/>
+          </div>
+        </div>;
+      )
+    }
+
     foreach ($quizes as $quiz) {
       $quiz_active_on = ($quiz->getActive());
       $quiz_active_off = (!$quiz->getActive());
